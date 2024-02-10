@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BTC/USD Prices</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-blue-100">
+    <div id="app" class="max-w-[1000px] mx-auto p-4">
+      <h1 class="font-bold text-3xl text-center text-blue-600 my-4">
+        Cryptocurrency Data
+      </h1>
+    </div>
+    <script>
+      // Improved row function for readability and maintainability
+      const generateTableRow = (key, value, index) => {
+        const isFirstRow = index === 0 ? "border-t" : "";
+        return `
+        <tr>
+          <td class="w-16 p-2 align-top border-b ${isFirstRow} border-gray-200">
+            <img class="h-full w-auto" src="${value.image}" alt="${value.name}" />
+          </td>
+          <td class="p-2 align-top border-b ${isFirstRow} border-gray-200">${key}</td>
+          <td class="p-2 text-blue-600 font-bold align-top border-b ${isFirstRow} border-gray-200">${value.name}</td>
+          <td class="p-2 align-top border-b ${isFirstRow} border-gray-200">${value.summary}</td>
+        </tr>
+      `;
+      };
+
+      // Simplified table creation function
+      const displayCryptoData = (data) => {
+        const tableRows = Object.entries(data)
+          .map((entry, index) => generateTableRow(...entry, index))
+          .join("");
+
+        const tableHtml = `<table class="w-full">${tableRows}</table>`;
+        document.getElementById("app").innerHTML += tableHtml;
+      };
+
+      // Fetch and display data
+      const fetchData = async () => {
+        try {
+          const response = await fetch(
+            "https://api.mtw-testnet.com/assets/all"
+          );
+          const data = await response.json();
+          displayCryptoData(data);
+        } catch (error) {
+          console.error("Failed to fetch cryptocurrency data:", error);
+        }
+      };
+
+      fetchData();
+    </script>
+  </body>
+</html>
